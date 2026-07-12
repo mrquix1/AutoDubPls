@@ -1,39 +1,25 @@
-/// <reference path="./plugin.d.ts" />
+ctx.videoCore.addEventListener("video-loaded-metadata", () => {
 
-$ui.register((ctx) => {
+  console.log("🎬 Metadata event fired");
 
-  console.log("🎬 Dub Preference Plugin Loaded");
+  const video = document.querySelector("video");
 
-  if (!ctx.videoCore) {
-    console.log("❌ VideoCore API not found");
-    return;
-  }
+  if (video && video.audioTracks) {
+    console.log("🎧 Audio track count:", video.audioTracks.length);
 
-  ctx.videoCore.showMessage("🚀 Dub Plugin Loaded", 3000);
+    for (let i = 0; i < video.audioTracks.length; i++) {
+      const track = video.audioTracks[i];
 
-  console.log("===== VIDEOCORE METHODS =====");
-  for (const key in ctx.videoCore) {
-    console.log(key, typeof ctx.videoCore[key]);
-  }
-  console.log("=============================");
-
-
-  ctx.videoCore.addEventListener("video-loaded-metadata", () => {
-
-    console.log("🎬 Metadata event fired");
-
-    ctx.videoCore.showMessage("🎬 Metadata Loaded", 3000);
-
-    try {
-      ctx.videoCore.setAudioTrack(1);
-
-      console.log("➡ Requested Audio Track 1");
-      ctx.videoCore.showMessage("➡ Track 1 Requested", 3000);
-
-    } catch (e) {
-      console.error("setAudioTrack failed:", e);
+      console.log("TRACK", i, {
+        id: track.id,
+        kind: track.kind,
+        label: track.label,
+        language: track.language,
+        enabled: track.enabled
+      });
     }
-
-  });
+  } else {
+    console.log("❌ No audioTracks found");
+  }
 
 });
