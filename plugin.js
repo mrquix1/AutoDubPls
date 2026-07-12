@@ -2,19 +2,18 @@
 
 $ui.register((ctx) => {
 
-  console.log("🎬 Dub API Inspector");
+  console.log("=== PLAYSTREAM DEBUG ===");
 
-  if (!ctx.videoCore) {
-    console.log("❌ No VideoCore");
-    return;
-  }
+  console.log(
+    "playStream:",
+    ctx.videoCore.playStream.toString()
+  );
 
-  console.log("playStream function:");
-  console.log(ctx.videoCore.playStream.toString());
+  console.log(
+    "playEpisodeFromPlaylist:",
+    ctx.videoCore.playEpisodeFromPlaylist.toString()
+  );
 
-  console.log("playEpisodeFromPlaylist function:");
-  console.log(ctx.videoCore.playEpisodeFromPlaylist.toString());
-
-  ctx.videoCore.showMessage("🔍 API dumped to console", 3000);
+  console.log("========================");
 
 });
