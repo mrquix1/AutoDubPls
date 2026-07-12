@@ -1,10 +1,11 @@
 {
   "id": "seanime-dub-preference",
   "name": "Dub Preference",
-  "description": "Automatically selects English dub audio tracks when available, falling back to subtitles if dub is unavailable. Tries multiple audio track indices for compatibility.",
+  "description": "Automatically selects English dub audio tracks...",
   "version": "1.1.0",
   "author": "mrquix1",
   "website": "https://github.com/mrquix1/AutoDubPls",
+  "language": "en",          ← ADD THIS LINE HERE
   "type": "plugin",
   "plugin": {
     "entry": "plugin.js",
