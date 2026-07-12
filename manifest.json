@@ -7,6 +7,7 @@
   "website": "https://github.com/mrquix1/AutoDubPls",
   "language": "en",
   "type": "plugin",
+  "payloadURI": "https://raw.githubusercontent.com/mrquix1/AutoDubPls/main/plugin.js",
   "plugin": {
     "entry": "plugin.js",
     "permissions": {
