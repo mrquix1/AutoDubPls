@@ -9,12 +9,12 @@ $ui.register((ctx) => {
     return;
   }
 
-  let checked = false;
+  let done = false;
 
   ctx.videoCore.addEventListener("video-loaded-metadata", async () => {
 
-    if (checked) return;
-    checked = true;
+    if (done) return;
+    done = true;
 
     console.log("🎬 Metadata loaded");
 
@@ -24,48 +24,44 @@ $ui.register((ctx) => {
 
       console.log("📺 Playback Info:", info);
 
-      const params = info.onlinestreamParams;
-
-      if (!params) {
-        console.log("❌ No onlinestream params");
+      if (!info.onlinestreamParams) {
+        console.log("❌ No stream params");
         return;
       }
 
-
-      if (params.dubbed === true) {
-
-        console.log("✅ Already using dub");
-        ctx.videoCore.showMessage("✅ Dub already active", 2000);
+      if (info.onlinestreamParams.dubbed === true) {
+        console.log("✅ Already dubbed");
         return;
-
       }
-
 
       console.log("🔎 Current stream is subbed");
-      ctx.videoCore.showMessage("🔎 Looking for dub...", 2000);
-
 
       const dubParams = {
-        ...params,
+        ...info.onlinestreamParams,
         dubbed: true
       };
 
+      console.log("🎯 Requesting dub:", dubParams);
 
-      console.log("🎯 Dub request:", dubParams);
+      await ctx.videoCore.playStream({
 
+        streamUrl: info.streamUrl,
 
-      if (ctx.videoCore.playStream) {
+        anidbEpisode:
+          info.episode?.episodeMetadata?.anidbId ||
+          info.episode?.aniDBEpisode,
 
-        console.log("▶ Trying playStream");
+        media: info.media,
 
-        await ctx.videoCore.playStream({
-          ...info,
-          onlinestreamParams: dubParams
-        });
+        onlinestreamParams: dubParams,
 
-        console.log("✅ Dub stream requested");
-      }
+        playbackType: info.playbackType,
+        target: info.target,
+        renderer: info.renderer
 
+      });
+
+      console.log("✅ Dub playback requested");
 
     } catch (e) {
 
