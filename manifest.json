@@ -5,7 +5,7 @@
   "version": "1.1.0",
   "author": "mrquix1",
   "website": "https://github.com/mrquix1/AutoDubPls",
-  "language": "en",
+  "language": "multi",
   "type": "plugin",
   "payloadURI": "https://raw.githubusercontent.com/mrquix1/AutoDubPls/main/plugin.js",
   "plugin": {
