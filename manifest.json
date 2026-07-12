@@ -9,7 +9,6 @@
   "author": "mrquix1",
   "icon": "",
   "website": "https://github.com/mrquix1/AutoDubPls",
-  "lang": "multi",
   "payloadURI": "https://raw.githubusercontent.com/mrquix1/AutoDubPls/main/plugin.js",
   "plugin": {
     "version": "1",
