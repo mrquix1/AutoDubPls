@@ -2,72 +2,43 @@
 
 function init() {
   $ui.register((ctx) => {
-    let dubSelected = false;
 
-    console.log("🎬 Dub Preference Plugin Loaded (MpvCore Compatible)");
+    console.log("🎬 Dub Preference Plugin Loaded");
 
-    // Listen for video metadata loaded (works with VideoCore/MpvCore built-in players)
-    if (ctx.videoCore) {
-      ctx.videoCore.addEventListener("video-loaded-metadata", (event) => {
-        dubSelected = false;
-        console.log("🔄 Video metadata loaded, attempting to select dub");
-        selectDub(ctx);
-      });
+    if (!ctx.videoCore) {
+      console.log("❌ VideoCore API not found");
+      return;
     }
 
-    function selectDub(ctx) {
-      // Try different audio track indices
-      // Most anime files follow this pattern:
-      // Index 0: Original language (usually Japanese)
-      // Index 1: English Dub (most common)
-      // Index 2: Alternative dub or language
-      
-      const tryIndices = [1, 0, 2]; // Order of preference
-      let selectedIndex = null;
+    console.log("📋 VideoCore methods:");
+    for (const key in ctx.videoCore) {
+      try {
+        console.log(key, typeof ctx.videoCore[key]);
+      } catch (e) {}
+    }
 
-      for (let i = 0; i < tryIndices.length; i++) {
+    ctx.videoCore.addEventListener("video-loaded-metadata", () => {
+      console.log("🔄 Metadata loaded");
+
+      try {
+        ctx.videoCore.setAudioTrack(1);
+        console.log("➡ Requested Audio Track 1");
+      } catch (e) {
+        console.error("❌ setAudioTrack failed:", e);
+      }
+    });
+
+    // Try again after 1 second in case metadata is too early
+    ctx.videoCore.addEventListener("video-loaded-metadata", () => {
+      setTimeout(() => {
         try {
-          const index = tryIndices[i];
-          ctx.videoCore.setAudioTrack(index);
-          selectedIndex = index;
-          dubSelected = true;
-          
-          ctx.videoCore.showMessage(`🔊 Audio Track ${index} Selected`, 2000);
-          console.log(`✅ Dub preference: Selected audio track ${index}`);
-          break; // Success, stop trying
-          
-        } catch (err) {
-          console.log(`⚠️ Audio track ${tryIndices[i]} not available, trying next...`);
-          // Continue to next index
+          ctx.videoCore.setAudioTrack(1);
+          console.log("➡ Requested Audio Track 1 (Delayed)");
+        } catch (e) {
+          console.error(e);
         }
-      }
+      }, 1000);
+    });
 
-      if (selectedIndex === null) {
-        console.log("⚠️ No audio tracks could be selected, using player default");
-        if (ctx.videoCore && ctx.videoCore.showMessage) {
-          ctx.videoCore.showMessage("ℹ️ Using default audio track", 2000);
-        }
-      }
-    }
-
-    ctx.screen.loadCurrent();
   });
 }
-
-// ============ TROUBLESHOOTING GUIDE ============
-// If the dub is not being selected correctly, try modifying the tryIndices array:
-//
-// Current order: [1, 0, 2]
-// Try these alternatives:
-//
-// If Index 0 is the dub:
-//   const tryIndices = [0, 1, 2];
-//
-// If Index 2 is the dub:
-//   const tryIndices = [2, 1, 0];
-//
-// If you know the exact index, use only that:
-//   ctx.videoCore.setAudioTrack(1); // or 0, 2, 3, etc.
-//
-// Check the console (F12) to see which tracks are available
-
